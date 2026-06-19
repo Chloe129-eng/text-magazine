@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TEXT. | Architecture & Trend Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght=300;400;500;600&display=swap" rel="stylesheet">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <style>
+        :root {
+            --bg-color: #fbfbfd;
+            --card-bg: #ffffff;
+            --text-color: #1d1d1f;
+            --text-secondary: #86868b;
+            --border-color: rgba(0, 0, 0, 0.08);
+            --input-border: rgba(0, 0, 0, 0.15);
+            --overlay-bg: rgba(251, 251, 253, 0.96);
+            --accent-color: #0071e3;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #000000;
+            --card-bg: #1c1c1e;
+            --text-color: #f5f5f7;
+            --text-secondary: #86868b;
+            --border-color: rgba(255, 255, 255, 0.15);
+            --input-border: rgba(255, 255, 255, 0.3);
+            --overlay-bg: rgba(10, 10, 10, 0.96);
+            --accent-color: #2997ff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            letter-spacing: -0.022em;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: 52px;
+            background: var(--bg-color);
+            opacity: 0.95;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 40px;
+        }
+
+        .logo {
+            font-weight: 600;
+            font-size: 16px;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 400;
+            margin-left: 28px;
+            transition: color 0.2s ease;
+            cursor: pointer;
+        }
+
+        nav a:hover, nav a.active {
+            color: var(--text-color);
+        }
+
+        .toggle-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin-left: 24px;
+            cursor: pointer;
+        }
+        .toggle-btn:hover { color: var(--text-color); }
+
+        main {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 110px 40px 40px 40px;
+        }
+
+        .page-section { display: none; }
+        .page-section.active { display: block; }
+
+        .magazine-hero {
+            border-bottom: 1px solid var(--text-color);
+            padding-bottom: 30px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .magazine-hero h1 {
+            font-size: 56px;
+            font-weight: 500;
+            line-height: 1.1;
+            letter-spacing: -0.03em;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+        }
+
+        .card-image {
+            width: 100%;
+            height: 240px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .card-content { padding: 24px; }
+        .card-tag { font-size: 11px; font-weight: 500; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 8px;}
+        .card-title { font-size: 17px; font-weight: 500; margin-bottom: 8px; line-height: 1.4; }
+
+        .timeline-container {
+            margin-top: 20px;
+            border-top: 1px solid var(--text-color);
+        }
+
+        .timeline-row {
+            display: grid;
+            grid-template-columns: 180px 220px 1fr;
+            padding: 32px 0;
+            border-bottom: 1px solid var(--border-color);
+            transition: background-color 0.2s;
+        }
+        
+        .timeline-row:hover { background-color: rgba(0, 0, 0, 0.01); }
+        [data-theme="dark"] .timeline-row:hover { background-color: rgba(255, 255, 255, 0.02); }
+
+        .time-period { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; color: var(--text-color); }
+        .time-period span { display: block; font-size: 11px; font-weight: 400; color: var(--text-secondary); margin-top: 4px; text-transform: uppercase; }
+        .time-location { font-size: 13.5px; font-weight: 500; color: var(--text-secondary); text-transform: uppercase; padding-right: 20px; }
+        .time-details { padding-right: 10px; }
+        .time-title { font-size: 18px; font-weight: 600; line-height: 1.3; margin-bottom: 8px; letter-spacing: -0.01em; }
+        .time-desc { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
+
+        .archive-gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .gallery-item { position: relative; border-radius: 12px; overflow: hidden; aspect-ratio: 1 / 1; cursor: pointer; }
+        .gallery-img { width: 100%; height: 100%; background-size: cover; background-position: center; transition: transform 0.5s; }
+        .gallery-item:hover .gallery-img { transform: scale(1.05); }
+
+        .article-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--overlay-bg); display: none; overflow-y: auto; z-index: 3000; }
+        .article-wrapper { max-width: 740px; margin: 100px auto; padding: 0 20px; position: relative; }
+        .article-close { position: fixed; top: 30px; right: 40px; font-size: 14px; background: none; border: none; color: var(--text-secondary); cursor: pointer; }
+        
+        .viewer-action-bar { display: flex; justify-content: flex-start; align-items: center; margin-bottom: 25px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; }
+        .share-group { display: flex; gap: 12px; }
+
+        .btn-action {
+            background: var(--text-color);
+            color: var(--bg-color);
+            border: none;
+            padding: 8px 16px;
+            font-size: 12px;
+            font-weight: 500;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: opacity 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-action:hover { opacity: 0.9; }
+
+        .view-meta-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .view-tag { font-size: 12px; font-weight: 500; color: var(--accent-color); text-transform: uppercase; }
+        .view-title { font-size: 36px; font-weight: 600; line-height: 1.25; margin-bottom: 24px; }
+        .view-img { width: 100%; height: 440px; border-radius: 16px; margin-bottom: 36px; background-size: cover; background-position: center; }
+        
+        /* 독자 전용 상세 뷰어: 수정 불가 (contenteditable 제거) */
+        .view-content { font-size: 16px; line-height: 1.85; white-space: pre-wrap; }
+
+        /* 독자용 상세뷰어용 플로팅 스크랩 버튼 */
+        #scrap-floating-btn {
+            position: absolute; display: none; background: #111111; color: #ffffff; padding: 6px 12px; font-size: 11px;
+            font-weight: 500; border-radius: 20px; cursor: pointer; z-index: 5000; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: none;
+        }
+
+        /* [핵심 레이아웃 업데이트] 관리자 글쓰기창 전용 리치 에디터 스타일 */
+        .rich-editor-box {
+            width: 100%; min-height: 200px; padding: 12px 14px; font-size: 14px; 
+            background: var(--bg-color); color: var(--text-color); border: 1px solid var(--input-border); 
+            border-radius: 6px; outline: none; white-space: pre-wrap; overflow-y: auto;
+        }
+        .rich-editor-box:focus { border-color: var(--text-color); }
+
+        /* 관리자 글쓰기용 텍스트 서식 툴바 */
+        #admin-writer-toolbar {
+            position: absolute; display: none; background: #111111; padding: 4px 6px; 
+            border-radius: 20px; z-index: 6000; box-shadow: 0 6px 16px rgba(0,0,0,0.2); 
+            border: 1px solid rgba(255,255,255,0.1); align-items: center; gap: 2px;
+        }
+        .admin-toolbar-btn {
+            background: none; border: none; color: #ffffff; padding: 4px 10px; font-size: 11px;
+            font-weight: 500; cursor: pointer; border-radius: 12px; transition: background 0.2s;
+        }
+        .admin-toolbar-btn:hover { background: rgba(255,255,255,0.2); }
+
+        .admin-modal {
+            max-width: 460px; margin: 180px auto; padding: 40px; background: var(--card-bg);
+            border: 1px solid var(--border-color); border-radius: 16px; box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+        }
+        .admin-modal h2 { font-size: 22px; font-weight: 600; margin-bottom: 20px; letter-spacing: -0.02em; }
+        .form-group { margin-bottom: 18px; display: flex; flex-direction: column; gap: 6px; position: relative; }
+        .form-group label { font-size: 12px; font-weight: 500; color: var(--text-secondary); }
+        .form-control {
+            width: 100%; padding: 10px 14px; font-size: 14px; background: var(--bg-color); color: var(--text-color);
+            border: 1px solid var(--input-border); border-radius: 6px; outline: none;
+        }
+        .form-control:focus { border-color: var(--text-color); }
+        
+        .file-label-btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            padding: 12px; background: var(--bg-color); border: 1px dashed var(--input-border);
+            border-radius: 6px; font-size: 13px; font-weight: 500; color: var(--text-secondary);
+            cursor: pointer; text-align: center; transition: all 0.2s;
+        }
+        .file-label-btn:hover { border-color: var(--text-color); color: var(--text-color); }
+        .file-preview-name { font-size: 12px; color: var(--accent-color); margin-top: 4px; display: none; font-weight: 500; }
+
+        .cms-indicator-bar {
+            background: #0071e3; color: #fff; text-align: center; font-size: 12px; padding: 6px 0;
+            position: fixed; top: 52px; left: 0; width: 100%; z-index: 999; display: none; font-weight: 500;
+        }
+
+        #instagram-story-template {
+            width: 1080px; height: 1920px; position: fixed; top: -9999px; left: -9999px; background: #f4f3f0; color: #1a1a1a;
+            padding: 120px 90px; display: flex; flex-direction: column; justify-content: space-between;
+        }
+        .story-header { display: flex; justify-content: space-between; font-size: 20px; font-weight: 500; color: #777777; border-bottom: 1px solid #dddddd; padding-bottom: 20px; }
+        .story-body { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; }
+        .story-scraped-text { font-size: 42px; font-weight: 400; line-height: 1.6; color: #222222; word-break: keep-all; }
+        .story-source-title { font-size: 24px; color: #666666; margin-top: 40px; font-style: italic; }
+        .story-footer { display: flex; justify-content: space-between; border-top: 1px solid #dddddd; padding-top: 30px; font-size: 19px; color: #777777; }
+
+        #instagram-card-template {
+            width: 1080px; height: 1440px; position: fixed; top: -9999px; left: -9999px; background: #ffffff; color: #111111;
+            padding: 90px; display: flex; flex-direction: column; justify-content: space-between;
+        }
+        .insta-header { display: flex; justify-content: space-between; border-bottom: 2px solid #111111; padding-bottom: 24px; font-size: 24px; font-weight: 600; }
+        .insta-title { font-size: 48px; font-weight: 600; line-height: 1.35; margin: 30px 0; }
+        .insta-img { width: 100%; height: 680px; border-radius: 14px; background-size: cover; background-position: center; }
+
+        .footer-profile-box {
+            border-top: 1px solid var(--border-color); padding-top: 40px; margin-top: 60px; display: none; grid-template-columns: 1fr 2fr; gap: 40px;
+        }
+        .profile-details {
+            background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 32px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px;
+        }
+        .footer-bottom {
+            margin-top: 50px; border-top: 1px solid var(--border-color); padding: 24px 0; font-size: 12px; color: var(--text-secondary); display: flex; justify-content: space-between;
+        }
+        .footer-links { display: flex; gap: 20px; }
+        .footer-links a { color: var(--text-secondary); text-decoration: none; font-weight: 500; cursor: pointer; }
+    </style>
+</head>
+<body data-theme="light">
+
+    <div class="cms-indicator-bar" id="cms-banner">TEXT. SYSTEM — Admin Mode Active</div>
+
+    <header>
+        <div class="logo" onclick="handleLogoClick()">TEXT.</div>
+        <nav>
+            <a id="nav-magazine" class="active" onclick="switchPage('magazine')">Magazine</a>
+            <a id="nav-calendar" onclick="switchPage('calendar')">Calendar</a>
+            <a id="nav-archive" onclick="switchPage('archive')">Archive</a>
+            <a id="nav-cms" style="display:none; color:var(--accent-color); font-weight:500;" onclick="switchPage('cms')">+ Upload Post</a>
+            <button class="toggle-btn" onclick="toggleTheme()" id="theme-btn">☀️ Light</button>
+        </nav>
+    </header>
+
+    <main>
+        <section id="page-magazine" class="page-section active">
+            <div class="magazine-hero">
+                <div><h1>Structural<br>Narratives.</h1></div>
+                <div style="text-align: right; color: var(--text-secondary); font-size: 13px;">
+                    <div>Vol. 01 — Trend Spaces</div>
+                    <div>June 2026</div>
+                </div>
+            </div>
+            <div class="grid-container" id="grid-content"></div>
+        </section>
+
+        <section id="page-calendar" class="page-section">
+            <div class="magazine-hero">
+                <div><h1>Global Architecture<br>Calendar.</h1></div>
+                <div style="text-align: right; color: var(--text-secondary); font-size: 13px;">
+                    <div>Industry Agenda & Forums</div>
+                </div>
+            </div>
+
+            <div class="timeline-container">
+                <div class="timeline-row">
+                    <div class="time-period">May - Nov 2026 <span>05.23 - 11.29</span></div>
+                    <div class="time-location">Venice, Italy</div>
+                    <div class="time-details">
+                        <div class="time-title">The 19th Venice Biennale International Architecture Exhibition</div>
+                        <div class="time-desc">The world's most prestigious architectural forum, showcasing groundbreaking structural solutions, spatial manifests, and masterwork design discourses.</div>
+                    </div>
+                </div>
+                <div class="timeline-row">
+                    <div class="time-period">September 2026 <span>09.19 - 09.27</span></div>
+                    <div class="time-location">London, UK</div>
+                    <div class="time-details">
+                        <div class="time-title">London Design Festival & Architecture Pavilions 2026</div>
+                        <div class="time-desc">A city-wide layout intersection of contemporary spatial installations, interior structural configurations, and eco-minimalism trends.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="page-archive" class="page-section">
+            <div class="magazine-hero">
+                <div><h1>Visual<br>Fragments.</h1></div>
+                <div style="text-align: right; color: var(--text-secondary); font-size: 13px;">
+                    <div>Curated Imagery Archive</div>
+                </div>
+            </div>
+            <div class="archive-gallery" id="gallery-content"></div>
+        </section>
+
+        <section id="page-cms" class="page-section">
+            <div class="magazine-hero">
+                <div><h1>Publishing<br>Desk.</h1></div>
+                <div style="text-align: right; color: var(--text-secondary); font-size: 13px;">
+                    <div>Content Management System</div>
+                </div>
+            </div>
+            
+            <div style="max-width: 600px; margin: 0 auto; background: var(--card-bg); border:1px solid var(--border-color); padding: 32px; border-radius: 12px; position: relative;">
+                <div class="form-group">
+                    <label>Category Tag</label>
+                    <input type="text" id="post-tag" class="form-control" placeholder="e.g. Trend Space, Architecture">
+                </div>
+                <div class="form-group">
+                    <label>Article Title</label>
+                    <input type="text" id="post-title" class="form-control" placeholder="Enter article header title">
+                </div>
+                
+                <div class="form-group">
+                    <label>Article Image Upload</label>
+                    <label for="post-file-input" class="file-label-btn">📁 Choose Image File from Device</label>
+                    <input type="file" id="post-file-input" accept="image/*" style="display:none;" onchange="handleFileSelect(this)">
+                    <div id="file-name-preview" class="file-preview-name"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>Body Content Description</label>
+                    <div id="post-desc-editor" class="rich-editor-box" contenteditable="true" onmouseup="handleAdminTextSelection()" data-placeholder="Write article narrative context here."></div>
+                </div>
+                
+                <div id="admin-writer-toolbar">
+                    <button class="admin-toolbar-btn" style="font-weight:bold;" onclick="applyAdminFormat('bold')">B</button>
+                    <button class="admin-toolbar-btn" style="text-decoration:underline;" onclick="applyAdminFormat('underline')">U</button>
+                </div>
+
+                <button class="btn-action" style="width: 100%; justify-content: center; margin-top: 10px; padding: 12px 0;" onclick="submitNewPost()">Publish to Magazine</button>
+            </div>
+        </section>
+
+        <div class="footer-profile-box" id="hidable-profile-area">
+            <div style="font-size: 24px; font-weight: 500;">Contact &<br>About.</div>
+            <div class="profile-details">
+                <div><strong>Editor / Portfolio</strong><br>Chloe (Hwang Se-bin)</div>
+                <div><strong>Email Contact</strong><br>chloe@example.com</div>
+                <div style="grid-column: span 2;"><strong>Instagram Channel</strong><br>@text.magazine_kr</div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <div>© 2026 TEXT. All rights reserved.</div>
+            <div class="footer-links">
+                <a href="https://instagram.com/@text.magazine_kr" target="_blank">Instagram</a>
+                <a id="contact-toggle-trigger" onclick="toggleProfileSection()">Contact.</a>
+            </div>
+        </div>
+    </main>
+
+    <div id="admin-login-overlay" class="article-overlay" style="background: rgba(0,0,0,0.4); backdrop-filter: blur(10px);">
+        <div class="admin-modal">
+            <h2>Admin Authorization</h2>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="admin-password-input" class="form-control" placeholder="••••" onkeydown="if(event.key==='Enter') verifyAdminLogin()">
+            </div>
+            <div style="display:flex; gap:10px; margin-top:24px;">
+                <button class="btn-action" style="background:#555; width:40%; justify-content:center;" onclick="closeAdminLogin()">Cancel</button>
+                <button class="btn-action" style="width:60%; justify-content:center;" onclick="verifyAdminLogin()">Sign In</button>
+            </div>
+            <p id="login-error-msg" style="color:red; font-size:12px; margin-top:12px; display:none;">Incorrect password. Please try again.</p>
+        </div>
+    </div>
+
+    <div id="article-viewer" class="article-overlay">
+        <button class="article-close" onclick="closeArticle()">✕ Close</button>
+        <div class="article-wrapper">
+            <div class="viewer-action-bar">
+                <div class="share-group">
+                    <button class="btn-action" onclick="copyArticleLink()">🔗 Copy Link</button>
+                    <button class="btn-action" onclick="exportToInstagramCard()">📸 Export to Feed (3:4)</button>
+                </div>
+            </div>
+            <div class="view-meta-row">
+                <div class="view-tag" id="view-tag">Tag</div>
+                <div class="view-date" id="view-date">2026.06.19</div>
+            </div>
+            <h2 class="view-title" id="view-title">Title</h2>
+            <div class="view-img" id="view-img"></div>
+            
+            <article class="view-content" id="view-content" onmouseup="handleReaderTextSelection()"></article>
+            <button id="scrap-floating-btn" onclick="generateStoryFromSelection()">📲 Scrap to Story</button>
+        </div>
+    </div>
+
+    <div id="instagram-story-template">
+        <div class="story-header"><div>TEXT. DIGITAL ARCHIVE</div><div>VOL. 01</div></div>
+        <div class="story-body">
+            <div style="font-size:90px; color:#ccc; line-height:0.1; margin-bottom:20px;">“</div>
+            <div class="story-scraped-text" id="story-node-text">Text...</div>
+            <div class="story-source-title" id="story-node-source">— Source</div>
+        </div>
+        <div class="story-footer"><div style="font-weight:600;">TEXT.</div><div>Read More at Bio</div></div>
+    </div>
+
+    <div id="instagram-card-template">
+        <div class="insta-header"><div>TEXT. MAGAZINE</div><div>VOL. 01</div></div>
+        <div class="insta-title" id="insta-node-title">Title</div>
+        <div class="insta-img" id="insta-node-img"></div>
+        <div style="display:flex; justify-content:space-between; font-size:17px; color:#666; border-top:1px solid #eee; padding-top:20px;">
+            <div>Curated by Chloe</div><div>@text.magazine_kr</div>
+        </div>
+    </div>
+
+    <script>
+        let articles = [
+            {
+                id: 1,
+                tag: "Trend Space",
+                title: "Silenced Urban Spaces: The Minimalism in Modern Architecture",
+                date: "2026.06.15",
+                desc: "What value do modern city dwellers look for in the middle of urban noise?<br><br>According to recent trend indexes, <b>'spaces of silence'</b> that emphasize bare concrete textures and extreme margins are emerging as new landmarks rather than colorful, complex commercial interiors.<br><br>Removing unnecessary visual noise not only grants visual satisfaction but gifts visitors <u>dynamic emotional comfort and structural narratives.</u>",
+                img: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80"
+            },
+            {
+                id: 2,
+                tag: "Architecture",
+                title: "Grid Systems in Interiors Structured by Light and Shadows",
+                date: "2026.05.28",
+                desc: "Light in architecture is not just secondary illumination; it is the most dynamic building material that completes a room.<br><br>The shade on raw concrete walls, changing step by step with natural light angles, holds an <u>analog density</u> that digital graphics cannot replicate. Within layouts precisely split using geometric grid structures, the asymmetrical harmony woven by light and dark elements stands as a core design tool.",
+                img: "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80"
+            }
+        ];
+        
+        let activeViewerArticleId = null;
+        let selectedTextForStory = "";
+        let uploadedImageBase64 = "";
+        
+        let logoClickCount = 0;
+        let logoClickTimeout;
+        let isAdminAuthorized = false;
+
+        function handleLogoClick() {
+            logoClickCount++;
+            clearTimeout(logoClickTimeout);
+            
+            if (logoClickCount === 3) {
+                logoClickCount = 0;
+                if (!isAdminAuthorized) {
+                    document.getElementById('admin-login-overlay').style.display = 'block';
+                    document.getElementById('admin-password-input').focus();
+                } else {
+                    alert("Already logged in as administrator.");
+                    switchPage('cms');
+                }
+                return;
+            }
+            
+            logoClickTimeout = setTimeout(() => {
+                logoClickCount = 0;
+                switchPage('magazine');
+            }, 400);
+        }
+
+        function verifyAdminLogin() {
+            const pwd = document.getElementById('admin-password-input').value;
+            if (pwd === "1234") {
+                isAdminAuthorized = true;
+                document.getElementById('login-error-msg').style.display = 'none';
+                document.getElementById('admin-login-overlay').style.display = 'none';
+                document.getElementById('nav-cms').style.display = 'inline-block';
+                document.getElementById('cms-banner').style.display = 'block';
+                document.querySelector('main').style.paddingTop = '140px';
+                switchPage('cms');
+            } else {
+                document.getElementById('login-error-msg').style.display = 'block';
+            }
+        }
+
+        function closeAdminLogin() {
+            document.getElementById('admin-login-overlay').style.display = 'none';
+            document.getElementById('admin-password-input').value = "";
+            document.getElementById('login-error-msg').style.display = 'none';
+        }
+
+        function handleFileSelect(input) {
+            const file = input.files[0];
+            const previewText = document.getElementById('file-name-preview');
+            
+            if (file) {
+                previewText.innerText = `Selected file: ${file.name}`;
+                previewText.style.display = 'block';
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    uploadedImageBase64 = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            } else {
+                previewText.style.display = 'none';
+                uploadedImageBase64 = "";
+            }
+        }
+
+        // [기능 업데이트] 아티클 등록 시 HTML 서식(볼드, 밑줄)을 안전하게 추출하여 반영
+        function submitNewPost() {
+            const tag = document.getElementById('post-tag').value.trim();
+            const title = document.getElementById('post-title').value.trim();
+            const descHtml = document.getElementById('post-desc-editor').innerHTML.trim(); // innerHTML로 포맷 유지
+            const finalImg = uploadedImageBase64 || "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80";
+
+            if (!tag || !title || !descHtml || descHtml === "<br>") {
+                alert("Please fill out all required input fields.");
+                return;
+            }
+
+            const newId = articles.length + 1;
+            const today = new Date();
+            const dateStr = `${today.getFullYear()}.${String(today.getMonth()+1).padStart(2,'0')}.${String(today.getDate()).padStart(2,'0')}`;
+
+            articles.unshift({
+                id: newId,
+                tag: tag,
+                title: title,
+                date: dateStr,
+                desc: descHtml, // 볼드/밑줄 태그가 적용된 스트링 데이터 저장
+                img: finalImg
+            });
+
+            // 입력 폼 완전 초기화
+            document.getElementById('post-tag').value = "";
+            document.getElementById('post-title').value = "";
+            document.getElementById('post-desc-editor').innerHTML = "";
+            document.getElementById('post-file-input').value = "";
+            document.getElementById('file-name-preview').style.display = 'none';
+            uploadedImageBase64 = "";
+
+            renderMagazine();
+            alert("New article successfully published with style formatting!");
+            switchPage('magazine');
+        }
+
+        // [핵심 기능] 관리자가 글을 쓸 때 텍스트를 드래그하면 볼드/밑줄 미니 툴바가 뜨는 함수
+        function handleAdminTextSelection() {
+            const selection = window.getSelection();
+            const selectedText = selection.toString().trim();
+            const toolbar = document.getElementById('admin-writer-toolbar');
+
+            if (selectedText.length > 0) {
+                const range = selection.getRangeAt(0);
+                const rect = range.getBoundingClientRect();
+                const containerRect = document.getElementById('page-cms').getBoundingClientRect();
+                
+                // 글쓰기 에디터 박스 내부의 상대위치를 계산해서 안착
+                toolbar.style.left = `${rect.left - containerRect.left + (rect.width/2) - 40}px`;
+                toolbar.style.top = `${rect.top - containerRect.top + window.scrollY - 38}px`;
+                toolbar.style.display = 'flex';
+            } else {
+                toolbar.style.display = 'none';
+            }
+        }
+
+        // 관리자용 서식 적용 처리 스크립트
+        function applyAdminFormat(command) {
+            document.execCommand(command, false, null);
+            document.getElementById('admin-writer-toolbar').style.display = 'none';
+        }
+
+        // [독자 모드] 상세창에서 일반 독자가 글을 긁었을 때는 '스토리 스크랩' 버튼만 단독 노출
+        function handleReaderTextSelection() {
+            const selection = window.getSelection();
+            const selectedText = selection.toString().trim();
+            const tooltip = document.getElementById('scrap-floating-btn');
+
+            if (selectedText.length > 3) {
+                selectedTextForStory = selectedText;
+                const range = selection.getRangeAt(0);
+                const rect = range.getBoundingClientRect();
+                const containerRect = document.getElementById('article-viewer').getBoundingClientRect();
+                
+                tooltip.style.left = `${rect.left - containerRect.left + (rect.width/2) - 60}px`;
+                tooltip.style.top = `${rect.top - containerRect.top + document.getElementById('article-viewer').scrollTop - 40}px`;
+                tooltip.style.display = 'block';
+            } else {
+                tooltip.style.display = 'none';
+            }
+        }
+
+        function generateStoryFromSelection() {
+            const targetText = selectedTextForStory || window.getSelection().toString().trim();
+            if(!targetText) return;
+            
+            const article = articles.find(a => a.id === activeViewerArticleId);
+            document.getElementById('story-node-text').innerText = `“ ${targetText} ”`;
+            document.getElementById('story-node-source').innerText = `— ${article.title}`;
+            
+            document.getElementById('scrap-floating-btn').style.display = 'none';
+            
+            html2canvas(document.getElementById('instagram-story-template'), { useCORS: true, scale: 2 }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `TEXT_Story_${article.id}.png`;
+                link.href = canvas.toDataURL();
+                link.click();
+            });
+        }
+
+        function exportToInstagramCard() {
+            const article = articles.find(a => a.id === activeViewerArticleId);
+            document.getElementById('insta-node-title').innerText = article.title;
+            document.getElementById('insta-node-img').style.backgroundImage = `url('${article.img}')`;
+            
+            html2canvas(document.getElementById('instagram-card-template'), { useCORS: true, scale: 2 }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `TEXT_Feed_${article.id}.png`;
+                link.href = canvas.toDataURL();
+                link.click();
+            });
+        }
+
+        function openArticle(id) {
+            activeViewerArticleId = id;
+            const article = articles.find(a => a.id === id);
+            document.getElementById('view-tag').innerText = article.tag;
+            document.getElementById('view-title').innerText = article.title;
+            document.getElementById('view-img').style.backgroundImage = `url('${article.img}')`;
+            document.getElementById('view-content').innerHTML = article.desc; // 서식 태그 그대로 렌더링
+            document.getElementById('article-viewer').style.display = 'block';
+        }
+
+        function closeArticle() {
+            document.getElementById('article-viewer').style.display = 'none';
+            document.getElementById('scrap-floating-btn').style.display = 'none';
+        }
+
+        function toggleTheme() {
+            const body = document.body;
+            const btn = document.getElementById('theme-btn');
+            if(body.getAttribute('data-theme') === 'light') {
+                body.setAttribute('data-theme', 'dark');
+                btn.innerText = "🌙 Dark";
+            } else {
+                body.setAttribute('data-theme', 'light');
+                btn.innerText = "☀️ Light";
+            }
+        }
+
+        function switchPage(pageId) {
+            document.querySelectorAll('.page-section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+            document.getElementById('page-' + pageId).classList.add('active');
+            
+            if(document.getElementById('nav-' + pageId)) {
+                document.getElementById('nav-' + pageId).classList.add('active');
+            }
+            if(pageId === 'archive') renderArchiveGallery();
+        }
+
+        function toggleProfileSection() {
+            const profileBox = document.getElementById('hidable-profile-area');
+            profileBox.style.display = (profileBox.style.display === 'grid') ? 'none' : 'grid';
+        }
+
+        function renderMagazine() {
+            const container = document.getElementById('grid-content');
+            container.innerHTML = "";
+            articles.forEach(article => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.setAttribute('onclick', `openArticle(${article.id})`);
+                card.innerHTML = `
+                    <div class="card-image" style="background-image: url('${article.img}')"></div>
+                    <div class="card-content">
+                        <div class="card-tag">${article.tag}</div>
+                        <div class="card-title">${article.title}</div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function renderArchiveGallery() {
+            const container = document.getElementById('gallery-content');
+            container.innerHTML = "";
+            articles.forEach(article => {
+                const item = document.createElement('div');
+                item.className = 'gallery-item';
+                item.setAttribute('onclick', `openArticle(${article.id})`);
+                item.innerHTML = `<div class="gallery-img" style="background-image: url('${article.img}')"></div>`;
+                container.appendChild(item);
+            });
+        }
+
+        renderMagazine();
+    </script>
+</body>
+</html>
