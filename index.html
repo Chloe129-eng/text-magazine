@@ -2,12 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>TEXT. | Architecture & Trend Portfolio</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght=300;400;500;600&display=swap" rel="stylesheet">
     
+    <!-- 고해상도 캔버스 캡처 라이브러리 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <style>
@@ -18,7 +19,7 @@
             --text-secondary: #86868b;
             --border-color: rgba(0, 0, 0, 0.08);
             --input-border: rgba(0, 0, 0, 0.15);
-            --overlay-bg: rgba(251, 251, 253, 0.96);
+            --overlay-bg: rgba(251, 251, 253, 0.98);
             --accent-color: #0071e3;
         }
 
@@ -29,7 +30,7 @@
             --text-secondary: #86868b;
             --border-color: rgba(255, 255, 255, 0.15);
             --input-border: rgba(255, 255, 255, 0.3);
-            --overlay-bg: rgba(10, 10, 10, 0.96);
+            --overlay-bg: rgba(10, 10, 10, 0.98);
             --accent-color: #2997ff;
         }
 
@@ -121,6 +122,10 @@
             align-items: flex-end;
         }
 
+        [data-theme="dark"] .magazine-hero {
+            border-bottom: 1px solid var(--text-color);
+        }
+
         .magazine-hero h1 {
             font-size: 56px;
             font-weight: 500;
@@ -164,6 +169,8 @@
             border-top: 1px solid var(--text-color);
         }
 
+        [data-theme="dark"] .timeline-container { border-top-color: var(--text-color); }
+
         .timeline-row {
             display: grid;
             grid-template-columns: 180px 220px 1fr;
@@ -189,7 +196,7 @@
 
         .article-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--overlay-bg); display: none; overflow-y: auto; z-index: 3000; }
         .article-wrapper { max-width: 740px; margin: 100px auto; padding: 0 20px; position: relative; }
-        .article-close { position: fixed; top: 30px; right: 40px; font-size: 14px; background: none; border: none; color: var(--text-secondary); cursor: pointer; }
+        .article-close { position: fixed; top: 24px; right: 24px; font-size: 16px; background: none; border: none; color: var(--text-color); cursor: pointer; font-weight: 500; z-index: 3100; }
         
         .viewer-action-bar { display: flex; justify-content: flex-start; align-items: center; margin-bottom: 25px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; }
         .share-group { display: flex; gap: 12px; }
@@ -212,19 +219,16 @@
 
         .view-meta-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
         .view-tag { font-size: 12px; font-weight: 500; color: var(--accent-color); text-transform: uppercase; }
-        .view-title { font-size: 36px; font-weight: 600; line-height: 1.25; margin-bottom: 24px; }
+        .view-title { font-size: 36px; font-weight: 600; line-height: 1.25; margin-bottom: 24px; letter-spacing: -0.02em; }
         .view-img { width: 100%; height: 440px; border-radius: 16px; margin-bottom: 36px; background-size: cover; background-position: center; }
         
-        /* 독자 전용 상세 뷰어: 수정 불가 (contenteditable 제거) */
-        .view-content { font-size: 16px; line-height: 1.85; white-space: pre-wrap; }
+        .view-content { font-size: 16px; line-height: 1.85; white-space: pre-wrap; word-break: break-word; }
 
-        /* 독자용 상세뷰어용 플로팅 스크랩 버튼 */
         #scrap-floating-btn {
-            position: absolute; display: none; background: #111111; color: #ffffff; padding: 6px 12px; font-size: 11px;
-            font-weight: 500; border-radius: 20px; cursor: pointer; z-index: 5000; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: none;
+            position: absolute; display: none; background: #111111; color: #ffffff; padding: 8px 14px; font-size: 12px;
+            font-weight: 500; border-radius: 20px; cursor: pointer; z-index: 5000; box-shadow: 0 4px 12px rgba(0,0,0,0.2); border: none;
         }
 
-        /* [핵심 레이아웃 업데이트] 관리자 글쓰기창 전용 리치 에디터 스타일 */
         .rich-editor-box {
             width: 100%; min-height: 200px; padding: 12px 14px; font-size: 14px; 
             background: var(--bg-color); color: var(--text-color); border: 1px solid var(--input-border); 
@@ -232,20 +236,19 @@
         }
         .rich-editor-box:focus { border-color: var(--text-color); }
 
-        /* 관리자 글쓰기용 텍스트 서식 툴바 */
         #admin-writer-toolbar {
             position: absolute; display: none; background: #111111; padding: 4px 6px; 
             border-radius: 20px; z-index: 6000; box-shadow: 0 6px 16px rgba(0,0,0,0.2); 
             border: 1px solid rgba(255,255,255,0.1); align-items: center; gap: 2px;
         }
         .admin-toolbar-btn {
-            background: none; border: none; color: #ffffff; padding: 4px 10px; font-size: 11px;
+            background: none; border: none; color: #ffffff; padding: 4px 10px; font-size: 12px;
             font-weight: 500; cursor: pointer; border-radius: 12px; transition: background 0.2s;
         }
         .admin-toolbar-btn:hover { background: rgba(255,255,255,0.2); }
 
         .admin-modal {
-            max-width: 460px; margin: 180px auto; padding: 40px; background: var(--card-bg);
+            width: 90%; max-width: 440px; margin: 120px auto; padding: 32px 24px; background: var(--card-bg);
             border: 1px solid var(--border-color); border-radius: 16px; box-shadow: 0 20px 50px rgba(0,0,0,0.1);
         }
         .admin-modal h2 { font-size: 22px; font-weight: 600; margin-bottom: 20px; letter-spacing: -0.02em; }
@@ -300,6 +303,88 @@
         }
         .footer-links { display: flex; gap: 20px; }
         .footer-links a { color: var(--text-secondary); text-decoration: none; font-weight: 500; cursor: pointer; }
+
+        /* ==========================================
+           ⚡ [핵심 추가] 모바일 환경 최적화 미디어쿼리 ⚡
+           ========================================== */
+        @media (max-width: 820px) {
+            header {
+                padding: 0 20px;
+            }
+            nav a {
+                margin-left: 16px;
+                font-size: 12px;
+            }
+            .toggle-btn {
+                margin-left: 14px;
+                font-size: 12px;
+            }
+            main {
+                padding: 90px 20px 20px 20px;
+            }
+            .magazine-hero {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+                padding-bottom: 20px;
+                margin-bottom: 25px;
+            }
+            .magazine-hero h1 {
+                font-size: 38px;
+            }
+            .magazine-hero div[style*="text-align: right"] {
+                text-align: left !important;
+                font-size: 12px;
+            }
+            .grid-container {
+                grid-template-columns: 1fr; /* 모바일에서 매거진 카드가 1열로 나란히 세로 배열 */
+                gap: 24px;
+            }
+            .card-image {
+                height: 200px;
+            }
+            .archive-gallery {
+                grid-template-columns: repeat(2, 1fr); /* 아카이브 갤러리는 2열 구성 */
+                gap: 12px;
+            }
+            .timeline-row {
+                grid-template-columns: 1fr; /* 타임라인 레이아웃을 한 세로줄로 정렬 */
+                gap: 8px;
+                padding: 24px 0;
+            }
+            .time-location {
+                padding-right: 0;
+                margin-bottom: 4px;
+            }
+            .time-title {
+                font-size: 16px;
+            }
+            .view-title {
+                font-size: 26px;
+                margin-bottom: 16px;
+            }
+            .view-img {
+                height: 240px;
+                margin-bottom: 24px;
+            }
+            .article-wrapper {
+                margin: 70px auto;
+            }
+            .footer-profile-box {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .profile-details {
+                grid-template-columns: 1fr;
+                padding: 20px;
+                gap: 16px;
+            }
+            .footer-bottom {
+                flex-direction: column;
+                gap: 12px;
+                align-items: flex-start;
+            }
+        }
     </style>
 </head>
 <body data-theme="light">
@@ -318,6 +403,7 @@
     </header>
 
     <main>
+        <!-- 1. 매거진 메인 섹션 -->
         <section id="page-magazine" class="page-section active">
             <div class="magazine-hero">
                 <div><h1>Structural<br>Narratives.</h1></div>
@@ -329,6 +415,7 @@
             <div class="grid-container" id="grid-content"></div>
         </section>
 
+        <!-- 2. GLOBAL ARCHITECTURE CALENDAR -->
         <section id="page-calendar" class="page-section">
             <div class="magazine-hero">
                 <div><h1>Global Architecture<br>Calendar.</h1></div>
@@ -357,6 +444,7 @@
             </div>
         </section>
 
+        <!-- 3. 아카이브 갤러리 섹션 -->
         <section id="page-archive" class="page-section">
             <div class="magazine-hero">
                 <div><h1>Visual<br>Fragments.</h1></div>
@@ -367,6 +455,7 @@
             <div class="archive-gallery" id="gallery-content"></div>
         </section>
 
+        <!-- 4. ADMIN CMS UPLOAD PANEL -->
         <section id="page-cms" class="page-section">
             <div class="magazine-hero">
                 <div><h1>Publishing<br>Desk.</h1></div>
@@ -375,7 +464,7 @@
                 </div>
             </div>
             
-            <div style="max-width: 600px; margin: 0 auto; background: var(--card-bg); border:1px solid var(--border-color); padding: 32px; border-radius: 12px; position: relative;">
+            <div style="max-width: 600px; margin: 0 auto; background: var(--card-bg); border:1px solid var(--border-color); padding: 24px; border-radius: 12px; position: relative;">
                 <div class="form-group">
                     <label>Category Tag</label>
                     <input type="text" id="post-tag" class="form-control" placeholder="e.g. Trend Space, Architecture">
@@ -406,12 +495,13 @@
             </div>
         </section>
 
+        <!-- 하단 프로필 영역 -->
         <div class="footer-profile-box" id="hidable-profile-area">
             <div style="font-size: 24px; font-weight: 500;">Contact &<br>About.</div>
             <div class="profile-details">
                 <div><strong>Editor / Portfolio</strong><br>Chloe (Hwang Se-bin)</div>
                 <div><strong>Email Contact</strong><br>chloe@example.com</div>
-                <div style="grid-column: span 2;"><strong>Instagram Channel</strong><br>@text.magazine_kr</div>
+                <div style="grid-column: span 1;"><strong>Instagram Channel</strong><br>@text.magazine_kr</div>
             </div>
         </div>
 
@@ -424,7 +514,8 @@
         </div>
     </main>
 
-    <div id="admin-login-overlay" class="article-overlay" style="background: rgba(0,0,0,0.4); backdrop-filter: blur(10px);">
+    <!-- 관리자 비밀 로그인 오버레이 -->
+    <div id="admin-login-overlay" class="article-overlay" style="background: rgba(0,0,0,0.5); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);">
         <div class="admin-modal">
             <h2>Admin Authorization</h2>
             <div class="form-group">
@@ -439,12 +530,12 @@
         </div>
     </div>
 
+    <!-- 아티클 모달 오버레이 (독자용 상세 모달) -->
     <div id="article-viewer" class="article-overlay">
         <button class="article-close" onclick="closeArticle()">✕ Close</button>
         <div class="article-wrapper">
             <div class="viewer-action-bar">
                 <div class="share-group">
-                    <button class="btn-action" onclick="copyArticleLink()">🔗 Copy Link</button>
                     <button class="btn-action" onclick="exportToInstagramCard()">📸 Export to Feed (3:4)</button>
                 </div>
             </div>
@@ -455,11 +546,12 @@
             <h2 class="view-title" id="view-title">Title</h2>
             <div class="view-img" id="view-img"></div>
             
-            <article class="view-content" id="view-content" onmouseup="handleReaderTextSelection()"></article>
+            <article class="view-content" id="view-content" onmouseup="handleReaderTextSelection()" ontouchend="handleReaderTextSelection()"></article>
             <button id="scrap-floating-btn" onclick="generateStoryFromSelection()">📲 Scrap to Story</button>
         </div>
     </div>
 
+    <!-- 인스타용 히든 노드 프레임들 -->
     <div id="instagram-story-template">
         <div class="story-header"><div>TEXT. DIGITAL ARCHIVE</div><div>VOL. 01</div></div>
         <div class="story-body">
@@ -537,7 +629,7 @@
                 document.getElementById('admin-login-overlay').style.display = 'none';
                 document.getElementById('nav-cms').style.display = 'inline-block';
                 document.getElementById('cms-banner').style.display = 'block';
-                document.querySelector('main').style.paddingTop = '140px';
+                document.querySelector('main').style.paddingTop = isAdminAuthorized ? '140px' : '110px';
                 switchPage('cms');
             } else {
                 document.getElementById('login-error-msg').style.display = 'block';
@@ -569,11 +661,10 @@
             }
         }
 
-        // [기능 업데이트] 아티클 등록 시 HTML 서식(볼드, 밑줄)을 안전하게 추출하여 반영
         function submitNewPost() {
             const tag = document.getElementById('post-tag').value.trim();
             const title = document.getElementById('post-title').value.trim();
-            const descHtml = document.getElementById('post-desc-editor').innerHTML.trim(); // innerHTML로 포맷 유지
+            const descHtml = document.getElementById('post-desc-editor').innerHTML.trim();
             const finalImg = uploadedImageBase64 || "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80";
 
             if (!tag || !title || !descHtml || descHtml === "<br>") {
@@ -590,11 +681,10 @@
                 tag: tag,
                 title: title,
                 date: dateStr,
-                desc: descHtml, // 볼드/밑줄 태그가 적용된 스트링 데이터 저장
+                desc: descHtml,
                 img: finalImg
             });
 
-            // 입력 폼 완전 초기화
             document.getElementById('post-tag').value = "";
             document.getElementById('post-title').value = "";
             document.getElementById('post-desc-editor').innerHTML = "";
@@ -607,7 +697,6 @@
             switchPage('magazine');
         }
 
-        // [핵심 기능] 관리자가 글을 쓸 때 텍스트를 드래그하면 볼드/밑줄 미니 툴바가 뜨는 함수
         function handleAdminTextSelection() {
             const selection = window.getSelection();
             const selectedText = selection.toString().trim();
@@ -618,7 +707,6 @@
                 const rect = range.getBoundingClientRect();
                 const containerRect = document.getElementById('page-cms').getBoundingClientRect();
                 
-                // 글쓰기 에디터 박스 내부의 상대위치를 계산해서 안착
                 toolbar.style.left = `${rect.left - containerRect.left + (rect.width/2) - 40}px`;
                 toolbar.style.top = `${rect.top - containerRect.top + window.scrollY - 38}px`;
                 toolbar.style.display = 'flex';
@@ -627,13 +715,11 @@
             }
         }
 
-        // 관리자용 서식 적용 처리 스크립트
         function applyAdminFormat(command) {
             document.execCommand(command, false, null);
             document.getElementById('admin-writer-toolbar').style.display = 'none';
         }
 
-        // [독자 모드] 상세창에서 일반 독자가 글을 긁었을 때는 '스토리 스크랩' 버튼만 단독 노출
         function handleReaderTextSelection() {
             const selection = window.getSelection();
             const selectedText = selection.toString().trim();
@@ -646,7 +732,7 @@
                 const containerRect = document.getElementById('article-viewer').getBoundingClientRect();
                 
                 tooltip.style.left = `${rect.left - containerRect.left + (rect.width/2) - 60}px`;
-                tooltip.style.top = `${rect.top - containerRect.top + document.getElementById('article-viewer').scrollTop - 40}px`;
+                tooltip.style.top = `${rect.top - containerRect.top + document.getElementById('article-viewer').scrollTop - 44}px`;
                 tooltip.style.display = 'block';
             } else {
                 tooltip.style.display = 'none';
@@ -690,13 +776,15 @@
             document.getElementById('view-tag').innerText = article.tag;
             document.getElementById('view-title').innerText = article.title;
             document.getElementById('view-img').style.backgroundImage = `url('${article.img}')`;
-            document.getElementById('view-content').innerHTML = article.desc; // 서식 태그 그대로 렌더링
+            document.getElementById('view-content').innerHTML = article.desc;
             document.getElementById('article-viewer').style.display = 'block';
+            document.body.style.overflow = 'hidden'; // 모달 열렸을 때 본문 스크롤 방지
         }
 
         function closeArticle() {
             document.getElementById('article-viewer').style.display = 'none';
             document.getElementById('scrap-floating-btn').style.display = 'none';
+            document.body.style.overflow = '';
         }
 
         function toggleTheme() {
